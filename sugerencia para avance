@@ -1,0 +1,11 @@
+Aqui se pueden ver los cambios recomendados para hacer mejor el codigo desde la base estructural, por ejemplo, mostrando el como se podrian manejar los metodos y demas herramientras mejores a las que se manejan en las aplicaciones Java normalmente.
+
+Tambien considero de que hay tres cosas que hacer para mejorar el progreso del trabajo:
+
+1: Pasar directamente lo que se tenga a javascript, para manejar mejor todo el tema del codigo y evitar posibles problemas al pasar el programa a Javascript en conjunto en una etapa mas avanzada del proyecto.
+2: Una vez pasado el codigo a algo mas alineado a lo que estamos haciendo, hacer las pruebas unitarias que el profesor menciono, ya que creo que estas se mencionan en la sustentacion.
+3: Generar aunque sea una base muy basica de interfaz en html, para hacer pruebas mas diversas ademas de las de JSunit.
+
+Aqui les dejo el link de Copilot que podemos ir usando, una vez vayamos anvanzando mas, podemos ir haciendo actualizaciones en otras conversaciones.
+
+https://github.com/copilot/share/403242aa-0aa0-8c11-8811-64460043683a

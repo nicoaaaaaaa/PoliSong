@@ -21,11 +21,11 @@ public class Polisong {
         Vendedor vendedor = new Vendedor("V001", "Tienda Música", "tienda@email.com", "pass456");
         
         // Productos de ejemplo
-        Producto guitarra = new Producto("P001", "Guitarra Acústica", 299.99);
-        Producto microfono = new Producto("P002", "Micrófono Studio", 149.99);
+        Producto Trench_V = new Producto("P001", "Trench", 9.99, "Vinilo");
+        Producto Borderline_C = new Producto("P002", "Borderline", 4.99, "Canción");
         
-        vendedor.agregarProducto(guitarra);
-        vendedor.agregarProducto(microfono);
+        vendedor.agregarProducto(Trench_V);
+        vendedor.agregarProducto(Borderline_C);
         
         int opcion;
         do {

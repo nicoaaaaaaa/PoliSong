@@ -11,12 +11,14 @@ public class Producto {
     private double precio;
     private int stock;
     private String categoria;
+    private String tipo;
     
-    public Producto(String idProducto, String nombre, double precio) {
+    public Producto(String idProducto, String nombre, double precio, String Tipo) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = 0;
+        this.tipo = tipo;
     }
     
     // Getters y Setters

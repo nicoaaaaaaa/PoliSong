@@ -1,0 +1,3 @@
+Para el desarollo del proyecto he estado usando Node.js y npm, asi que serian necesario tenerlos instalados.
+
+Codigo para correr el servidor: node src/index.js

@@ -3,12 +3,15 @@ import Usuario from "../models/Usuario.js";
 export const registrarUsuario = async (req, res) => {
   try {
     const { nombre, correo, contraseña, rol } = req.body;
-
+    
     // Verificar si el usuario ya existe
-    const existente = await Usuario.findOne({ where: { correo } });
+
+    const correoNormalizado = correo.toLowerCase();
+
+    const existente = await Usuario.findOne({ where: { correo: correoNormalizado } });
     if (existente) {
-      return res.status(400).json({ msg: "El correo ya está registrado." });
-    }
+    return res.status(400).json({ msg: "El correo ya está registrado." });
+}
 
    if (!contraseña || contraseña.length < 6) {
   return res.status(400).json({
@@ -18,7 +21,7 @@ export const registrarUsuario = async (req, res) => {
     // Crear nuevo usuario
     const nuevoUsuario = await Usuario.create({
       nombre,
-      correo,
+      correo: correoNormalizado,
       contraseña,
       rol
     });

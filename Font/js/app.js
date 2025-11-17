@@ -46,3 +46,19 @@ document.getElementById("borrarTodosUsuarios").addEventListener("click", async (
     const data = await res.json();
     document.getElementById("resultado").textContent = data.msg;
 });
+
+document.getElementById("btnEliminarUsuario").addEventListener("click", async () => {
+    const id = document.getElementById("idEliminar").value;
+
+    if (!id) {
+        document.getElementById("resultado").textContent = "Debes ingresar un ID.";
+        return;
+    }
+
+    const res = await fetch(`/api/usuarios/e/${id}`, {
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+    document.getElementById("resultado").textContent = data.msg;
+});

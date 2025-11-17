@@ -28,6 +28,26 @@ router.delete("/e", async (req, res) => {
   }
 });
 
+router.delete("/e/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await Usuario.destroy({
+      where: { idUsuario: id }
+    });
+
+    if (deleted) {
+      res.json({ msg: `Usuario con ID ${id} eliminado.` });
+    } else {
+      res.status(404).json({ msg: "No existe un usuario con ese ID." });
+    }
+
+  } catch (error) {
+    console.error("❌ Error al eliminar usuario:", error);
+    res.status(500).json({ msg: "Error en el servidor." });
+  }
+});
+
 
 // Registrar un usuario
 /*router.post("/registro", async (req, res) => {

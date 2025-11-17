@@ -1,3 +1,4 @@
 Para el desarollo del proyecto he estado usando Node.js y npm, asi que serian necesario tenerlos instalados.
 
 Codigo para correr el servidor: node src/index.js
+Url para correr las pruebas de registro e inicio de sesion: /index.html

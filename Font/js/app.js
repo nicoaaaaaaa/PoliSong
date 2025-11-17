@@ -31,10 +31,30 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
 
 // VER USUARIOS
-document.getElementById("verUsuariosBtn").addEventListener("click", async () => {
-    const res = await fetch("/api/usuarios");
-    document.getElementById("resultado").textContent = await res.text();
+
+document.getElementById("mostrarUsuarios").addEventListener("click", async () => {
+    const res = await fetch("/api/usuarios"); // Ajustar ruta si es diferente
+    const usuarios = await res.json();
+
+    console.log("Usuarios recibidos:", usuarios);
+
+    const tbody = document.querySelector("#tablaUsuarios tbody");
+    tbody.innerHTML = ""; // limpiar tabla antes de agregar nuevos datos
+
+    usuarios.forEach(usuario => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>${usuario.idUsuario}</td>
+            <td>${usuario.nombre}</td>
+            <td>${usuario.correo}</td>
+            <td>${usuario.rol}</td>
+        `;
+
+        tbody.appendChild(fila);
+    });
 });
+
 
 // Borrar todos los usuarios
 

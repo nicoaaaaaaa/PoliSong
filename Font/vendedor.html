@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Vendedor</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+
+<h1>Publicar Vinilo</h1>
+
+<button id="cambiarRol">Cambiar a vendedor</button>
+
+<form id="nuevoViniloForm">
+    <input type="text" name="nombre" placeholder="Nombre del vinilo" required>
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    <input type="number" name="stock" placeholder="Stock" required>
+    <textarea name="descripcion" placeholder="Descripción"></textarea>
+    <button type="submit">Publicar</button>
+</form>
+
+<script src="js/vendedor.js"></script>
+</body>
+</html>

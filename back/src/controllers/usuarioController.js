@@ -13,6 +13,8 @@ export const registrarUsuario = async (req, res) => {
     return res.status(400).json({ msg: "El correo ya está registrado." });
 }
 
+    // Verificar si la contraseña es valida
+
    if (!contraseña || contraseña.length < 6) {
   return res.status(400).json({
     msg: "La contraseña debe tener al menos 6 caracteres."
@@ -65,5 +67,28 @@ export const iniciarSesion = async (req, res) => {
   } catch (error) {
     console.error("❌ Error al iniciar sesión:", error);
     res.status(500).json({ msg: "Error en el servidor." });
+  }
+};
+
+// Cambiar rol
+
+export const cambiarRol = async (req, res) => {
+  try {
+    const { nuevoRol } = req.body;
+    const usuarioId = req.user.idUsuario; // viene del middleware de auth
+
+    if (!["comprador", "vendedor"].includes(nuevoRol)) {
+      return res.status(400).json({ message: "Rol inválido" });
+    }
+
+    const usuario = await Usuario.findByPk(usuarioId);
+
+    usuario.rol = nuevoRol;
+    await usuario.save();
+
+    return res.json({ message: "Rol actualizado", rol: nuevoRol });
+  } catch (error) {
+    console.log("Error al cambiar rol:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 };

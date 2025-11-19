@@ -3,6 +3,7 @@ import cors from "cors";
 import sequelize from "./db/connection.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import devRoutes from "./routes/devRoutes.js";
+import productoRoutes from "./routes/productoRoutes.js";
 import path from "path";
 
 const app = express();
@@ -22,7 +23,7 @@ sequelize.sync({ force: false }).then(() => {
     await sequelize.sync({ alter: true }); // crea las tablas si no existen
     console.log("🗄️ Base de datos sincronizada correctamente.");
   } catch (error) {
-    console.error("❌ Error al sincronizar la base de datos:", error.message);
+    console.error("Error al sincronizar la base de datos:", error.message);
   }
 })();
 
@@ -36,9 +37,11 @@ app.use("/api/usuarios", usuarioRoutes);
 
 app.use("/api/dev", devRoutes);
 
+app.use("/api/productos", productoRoutes);
+
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
 app.get("/api/prueba", (req, res) => {

@@ -26,6 +26,8 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         body: JSON.stringify(data)
     });
 
+    console.log("Token guardado:", localStorage.getItem("token"));
+
     document.getElementById("resultado").textContent = await res.text();
 });
 

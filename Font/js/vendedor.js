@@ -1,5 +1,7 @@
+console.log("Token guardado:", localStorage.getItem("token"));
+
 document.getElementById("cambiarRol").addEventListener("click", async () => {
-    const res = await fetch("/api/usuarios/cambiar-rol", {
+    const res = await fetch("/api/usuarios/cambiarRol", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)

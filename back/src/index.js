@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import sequelize from "./db/connection.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import devRoutes from "./routes/devRoutes.js";
 import productoRoutes from "./routes/productoRoutes.js";
 import path from "path";
 
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -47,3 +49,5 @@ app.listen(PORT, () => {
 app.get("/api/prueba", (req, res) => {
   res.send("Ruta de prueba funcionando correctamente ✅");
 });
+
+console.log("JWT_SECRET:", process.env.JWT_SECRET);

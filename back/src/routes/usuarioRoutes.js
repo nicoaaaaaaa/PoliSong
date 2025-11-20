@@ -1,6 +1,6 @@
 import express from "express";
 import Usuario from "../models/Usuario.js";
-import {registrarUsuario, iniciarSesion, cambiarRol} from "../controllers/usuarioController.js";
+import {registrarUsuario, iniciarSesion, cambiarRol, verPerfil} from "../controllers/usuarioController.js";
 import autenticado from "../middleware/autenticado.js";
 
 const router = express.Router();
@@ -53,6 +53,15 @@ router.post("/registro", registrarUsuario);
 
 router.post("/login", iniciarSesion);
 
-router.put("/cambiar-rol", autenticado, cambiarRol);
+router.put("/cambiarRol", autenticado, cambiarRol);
+
+router.post("/verPerfil", verPerfil);
+
+router.get("/protegido", autenticado, (req, res) => {
+    res.json({
+        msg: "Acceso válido",
+        usuario: req.usuario
+    });
+});
 
 export default router;

@@ -12,4 +12,6 @@ async function cargarCatalogo() {
     });
 }
 
+console.log("Token guardado:", localStorage.getItem("token"));
+
 cargarCatalogo();

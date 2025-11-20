@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuario.js";
+import jwt from "jsonwebtoken";
 
 export const registrarUsuario = async (req, res) => {
   try {
@@ -43,24 +44,34 @@ export const iniciarSesion = async (req, res) => {
   try {
     const { correo, contraseña } = req.body;
 
-    // Buscar usuario por correo
     const usuario = await Usuario.findOne({ where: { correo } });
     if (!usuario) {
       return res.status(404).json({ msg: "Usuario no encontrado." });
     }
 
-    // Comparar contraseña ingresada con la guardada en BD
     if (contraseña !== usuario.contraseña) {
       return res.status(401).json({ msg: "Contraseña incorrecta." });
     }
 
-    // Si todo ok → respuesta
+    // Crear token JWT
+    const token = jwt.sign(
+        {
+            idUsuario: usuario.idUsuario,
+            nombre: usuario.nombre,
+            rol: usuario.rol
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "2h" }
+    );
+
     res.json({
       msg: "Inicio de sesión exitoso.",
+      token,
       usuario: {
         idUsuario: usuario.idUsuario,
         nombre: usuario.nombre,
         correo: usuario.correo,
+        rol: usuario.rol
       }
     });
 
@@ -90,5 +101,30 @@ export const cambiarRol = async (req, res) => {
   } catch (error) {
     console.log("Error al cambiar rol:", error);
     res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
+// Ver perfil
+
+export const verPerfil = async (req, res) => {
+  try {
+    const usuario = await Usuario.findByPk(req.usuario.idUsuario);
+
+    if (!usuario) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    res.json({
+      usuario: {
+        idUsuario: usuario.idUsuario,
+        nombre: usuario.nombre,
+        correo: usuario.correo,
+        rol: usuario.rol
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error al obtener perfil" });
   }
 };

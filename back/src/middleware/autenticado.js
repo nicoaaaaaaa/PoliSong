@@ -1,25 +1,22 @@
 import jwt from "jsonwebtoken";
 
-export const autenticado = (req, res, next) => {
-  try {
+const autenticado = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ msg: "Token no proporcionado" });
+    if (!authHeader) {
+        return res.status(401).json({ msg: "No autorizado. Falta token." });
     }
 
+    // El token viene como: "Bearer as87asd87a8sd7as8d7"
     const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    req.usuario = decoded;
-
-    next();
-
-  } catch (error) {
-    console.error("Error en autenticación:", error);
-    res.status(401).json({ msg: "Token inválido o expirado" });
-  }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.usuario = decoded; // <-- aquí queda la info del usuario del token
+        next();
+    } catch (error) {
+        return res.status(401).json({ msg: "Token inválido o expirado." });
+    }
 };
 
 export default autenticado;

@@ -10,11 +10,10 @@
 
 <nav>
     <a href="catalogo.html">Catálogo</a>
-    <a href="vendedor.html">Panel Vendedor</a>
-    <a href="dashboard.html">Ver perfil</a>
+    <a href="panelVendedor.html">Panel Vendedor</a>
 </nav>
 
-<h1>Publicar Vinilo</h1>
+<h1>Publicar Vinilo o Cancion</h1>
 
 <button id="cambiarRol">Cambiar a vendedor</button>
 
@@ -32,8 +31,20 @@
     <button type="submit">Publicar</button>
 </form>
 
+<hr>
 
+<form id="nuevoMp3Form">
+    <input type="text" name="nombre" placeholder="Nombre de la Cancion" required>
+    <input type="text" name="artista" placeholder="Artista" required>
+    <input type="number" name="year" placeholder="Año" required>
+    <input type="text" name="genero" placeholder="Género" required>
 
-<script src="js/vendedor.js"></script>
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    <input type="file" name="archivoUrl" placeholder="Mp3" required>
+
+    <button type="submit">Publicar</button>
+</form>
+
+<script src="js/panelVendedor.js"></script>
 </body>
 </html>

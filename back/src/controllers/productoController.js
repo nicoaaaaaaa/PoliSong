@@ -58,3 +58,26 @@ export const publicarVinilo = async (req, res) => {
   }
   
 };
+
+export const publicarmp3 = async (req, res) => {
+  try{
+  const { nombre, precio, artista, year, genero, archivoUrl} =req.body;
+
+    const nuevo = await Producto.create({
+      nombre,
+      precio,
+      tipo: "mp3",
+      artista,
+      year,
+      genero,
+      archivoUrl
+    });
+
+    res.json({
+    mensaje: "Mp3 publicado correctamente",
+    producto: nuevo,
+    });
+  } catch (err){
+    res.status(500).json({ error: err.mensaje});
+  }
+};

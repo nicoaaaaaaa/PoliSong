@@ -18,11 +18,10 @@ const Producto = sequelize.define("Producto", {
     type: DataTypes.ENUM("vinilo", "mp3"),
     allowNull: false,
   },
-
+  artista: { type: DataTypes.STRING, allowNull: false },
+  year: { type: DataTypes.INTEGER, allowNull: false},
+  genero: { type: DataTypes.STRING, allowNull: false },
   // 🟦 Campos para vinilo
-  artista: { type: DataTypes.STRING },
-  year: { type: DataTypes.INTEGER },
-  genero: { type: DataTypes.STRING },
   stock: { type: DataTypes.INTEGER, defaultValue: 0 },
 
   // 🟧 Campos para mp3

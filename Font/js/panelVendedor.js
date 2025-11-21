@@ -56,7 +56,44 @@ document.getElementById("nuevoViniloForm").addEventListener("submit", async e =>
         tipo: "vinilo"
     };
 
-    const res = await fetch("/api/productos/publicar", {
+    const res = await fetch("/api/productos/publicarV", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  
+        },
+        body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    console.log("📌 RESPUESTA DEL SERVIDOR:", json);
+    console.log("📌 STATUS:", res.status);
+
+    alert(JSON.stringify(json, null, 2));
+
+});
+
+document.getElementById("nuevoMp3Form").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (payload.rol !== "vendedor") {
+    alert("No tienes permisos para publicar productos.");
+    return;
+    }
+
+    const data = {
+        nombre: e.target.nombre.value,
+        precio: e.target.precio.value,
+        artista: e.target.artista.value,
+        year: e.target.year.value,
+        genero: e.target.genero.value,
+        archivoUrl: e.target.archivoUrl.value,
+        tipo: "mp3"
+    };
+
+    const res = await fetch("/api/productos/publicarM", {
         method: "POST",
         headers: { 
             "Content-Type": "application/json",

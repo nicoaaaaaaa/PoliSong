@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./db/connection.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
-import devRoutes from "./routes/devRoutes.js";
 import productoRoutes from "./routes/productoRoutes.js";
 import path from "path";
 
@@ -36,8 +35,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/usuarios", usuarioRoutes);
-
-app.use("/api/dev", devRoutes);
 
 app.use("/api/productos", productoRoutes);
 

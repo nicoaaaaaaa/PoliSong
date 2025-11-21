@@ -1,11 +1,56 @@
 // src/routes/productoRoutes.js
+import Producto from "../models/Producto.js";
 import { Router } from "express";
 import { publicarVinilo } from "../controllers/productoController.js";
 import { isVendedor } from "../middleware/isVendedor.js";
+import autenticado from "../middleware/autenticado.js";
 
 const router = Router();
 
 // Solo vendedores pueden publicar
-router.post("/publicar-vinilo", isVendedor, publicarVinilo);
+router.post("/publicar", autenticado, isVendedor, publicarVinilo);
+
+router.get("/ver", async (req, res) => {
+  try {
+    const productos = await Producto.findAll();
+    res.json(productos);
+  } catch (error) {
+    console.error("Error al obtener productos:", error);
+    res.status(500).json({ msg: "Error al obtener productos" });
+  }
+});
+
+router.delete("/e", async (req, res) => {
+  try {
+    await Producto.destroy({
+      where: {},
+      truncate: true // reinicia la tabla
+    });
+    res.json({ msg: "Todos los productos fueron eliminados." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error al borrar productos." });
+  }
+});
+
+router.delete("/e/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await Producto.destroy({
+      where: { idProducto: id }
+    });
+
+    if (deleted) {
+      res.json({ msg: `Producto con ID ${id} eliminado.` });
+    } else {
+      res.status(404).json({ msg: "No existe un Producto con ese ID." });
+    }
+
+  } catch (error) {
+    console.error("❌ Error al eliminar producto:", error);
+    res.status(500).json({ msg: "Error en el servidor." });
+  }
+});
 
 export default router;

@@ -20,11 +20,19 @@
 
 <form id="nuevoViniloForm">
     <input type="text" name="nombre" placeholder="Nombre del vinilo" required>
+    <input type="text" name="artista" placeholder="Artista" required>
+    <input type="number" name="year" placeholder="Año" required>
+    <input type="text" name="genero" placeholder="Género" required>
+
     <input type="number" name="precio" placeholder="Precio" step="0.01" required>
     <input type="number" name="stock" placeholder="Stock" required>
+
     <textarea name="descripcion" placeholder="Descripción"></textarea>
+
     <button type="submit">Publicar</button>
 </form>
+
+
 
 <script src="js/vendedor.js"></script>
 </body>

@@ -1,40 +1,74 @@
 console.log("Token guardado:", localStorage.getItem("token"));
 
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+
+    console.log("Token detectado ⇒", token ? token : "No hay token");
+
+    if (!token) {
+        console.warn("No hay token, redirigiendo al login...");
+        return window.location.href = "login.html";
+    }
+
+    cargarPerfil(token);
+});
+
 document.getElementById("cambiarRol").addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+
     const res = await fetch("/api/usuarios/cambiarRol", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token 
+        }
     });
 
     const data = await res.json();
-    document.getElementById("resultado").textContent = data.msg;
+
+    alert(data.msg);
+
+    if (data.token) {
+        // Guardamos el token nuevo
+        localStorage.setItem("token", data.token);
+    }
 });
 
 document.getElementById("nuevoViniloForm").addEventListener("submit", async e => {
     e.preventDefault();
 
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-    if (!usuario || usuario.rol !== "vendedor") {
-        alert("No tienes permisos para publicar productos.");
-        return;
+    const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (payload.rol !== "vendedor") {
+    alert("No tienes permisos para publicar productos.");
+    return;
     }
 
     const data = {
-        idVendedor: usuario.idUsuario,
+        idVendedor: payload.idUsuario,
         nombre: e.target.nombre.value,
         precio: e.target.precio.value,
+        artista: e.target.artista.value,
+        year: e.target.year.value,
+        genero: e.target.genero.value,
         stock: e.target.stock.value,
         descripcion: e.target.descripcion.value,
         tipo: "vinilo"
     };
 
-    const res = await fetch("/api/productos", {
+    const res = await fetch("/api/productos/publicar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  
+        },
         body: JSON.stringify(data)
     });
 
     const json = await res.json();
-    alert(json.msg || json.error);
+    console.log("📌 RESPUESTA DEL SERVIDOR:", json);
+    console.log("📌 STATUS:", res.status);
+
+    alert(JSON.stringify(json, null, 2));
+
 });

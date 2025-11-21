@@ -53,7 +53,7 @@ router.post("/registro", registrarUsuario);
 
 router.post("/login", iniciarSesion);
 
-router.put("/cambiarRol", autenticado, cambiarRol);
+router.post("/cambiarRol", autenticado, cambiarRol);
 
 router.post("/verPerfil", verPerfil);
 

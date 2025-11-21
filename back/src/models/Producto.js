@@ -9,6 +9,7 @@ const Producto = sequelize.define("Producto", {
     autoIncrement: true,
     primaryKey: true,
   },
+  idVendedor: { type: DataTypes.STRING},
   nombre: { type: DataTypes.STRING, allowNull: false },
   descripcion: { type: DataTypes.STRING },
   precio: { type: DataTypes.FLOAT, allowNull: false },
@@ -20,7 +21,7 @@ const Producto = sequelize.define("Producto", {
 
   // 🟦 Campos para vinilo
   artista: { type: DataTypes.STRING },
-  año: { type: DataTypes.INTEGER },
+  year: { type: DataTypes.INTEGER },
   genero: { type: DataTypes.STRING },
   stock: { type: DataTypes.INTEGER, defaultValue: 0 },
 

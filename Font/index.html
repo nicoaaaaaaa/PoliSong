@@ -57,8 +57,32 @@
 <button id="borrarTodosUsuarios"> Borrar Todos los Usuarios</button>
 
 <h3>Eliminar usuario por ID</h3>
-<input type="number" id="idEliminar" placeholder="ID del usuario">
+<input type="number" id="idEliminarU" placeholder="ID del usuario">
 <button id="btnEliminarUsuario">Eliminar</button>
+
+<hr>
+
+<button id="mostrarProductos">Ver productos registrados</button>
+
+<table id="tablaProductos" border="1">
+  <thead>
+    <tr>
+      <th>ID Producto</th>
+      <th>Nombre</th>
+      <th>Artista</th>
+      <th>ID Vendedor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Aquí se insertan las filas dinámicamente -->
+  </tbody>
+</table>
+
+<button id="borrarTodosProductos"> Borrar Todos los Productos</button>
+
+<h3>Eliminar producto por ID</h3>
+<input type="number" id="idEliminarP" placeholder="ID del producto">
+<button id="btnEliminarProducto">Eliminar</button>
 
 <pre id="resultado"></pre>
 

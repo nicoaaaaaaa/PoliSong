@@ -70,7 +70,7 @@ document.getElementById("borrarTodosUsuarios").addEventListener("click", async (
 });
 
 document.getElementById("btnEliminarUsuario").addEventListener("click", async () => {
-    const id = document.getElementById("idEliminar").value;
+    const id = document.getElementById("idEliminarU").value;
 
     if (!id) {
         document.getElementById("resultado").textContent = "Debes ingresar un ID.";
@@ -78,6 +78,58 @@ document.getElementById("btnEliminarUsuario").addEventListener("click", async ()
     }
 
     const res = await fetch(`/api/usuarios/e/${id}`, {
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+    document.getElementById("resultado").textContent = data.msg;
+});
+
+// VER Productos
+
+document.getElementById("mostrarProductos").addEventListener("click", async () => {
+    const res = await fetch("/api/productos/ver"); // Ajustar ruta si es diferente
+    const productos = await res.json();
+
+    console.log("Productos recibidos:", productos);
+
+    const tbody = document.querySelector("#tablaProductos tbody");
+    tbody.innerHTML = ""; // limpiar tabla antes de agregar nuevos datos
+
+    productos.forEach(productos => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>${productos.idProducto}</td>
+            <td>${productos.nombre}</td>
+            <td>${productos.artista}</td>
+            <td>${productos.idVendedor}</td>
+        `;
+
+        tbody.appendChild(fila);
+    });
+});
+
+// Borrar todos los productos
+
+document.getElementById("borrarTodosProductos").addEventListener("click", async () => {
+    const res = await fetch("/api/productos/e", {
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+    document.getElementById("resultado").textContent = data.msg;
+});
+
+document.getElementById("btnEliminarProducto").addEventListener("click", async () => {
+    const id = document.getElementById("idEliminarP").value;
+
+    if (!id) {
+        document.getElementById("resultado").textContent = "Debes ingresar un ID.";
+        return;
+    }
+
+    const res = await fetch(`/api/productos/e/${id}`, {
         method: "DELETE"
     });
 

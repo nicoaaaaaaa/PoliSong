@@ -84,25 +84,45 @@ export const iniciarSesion = async (req, res) => {
 // Cambiar rol
 
 export const cambiarRol = async (req, res) => {
-  try {
-    const { nuevoRol } = req.body;
-    const usuarioId = req.user.idUsuario; // viene del middleware de auth
+    try {
+        const idUsuario = req.usuario.idUsuario;
 
-    if (!["comprador", "vendedor"].includes(nuevoRol)) {
-      return res.status(400).json({ message: "Rol inválido" });
+        const usuario = await Usuario.findByPk(idUsuario);
+
+        if (!usuario) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
+
+        if (usuario.rol === "vendedor") {
+            return res.json({ msg: "Ya eres vendedor" });
+        }
+
+        // Cambiar rol
+        usuario.rol = "vendedor";
+        await usuario.save();
+
+        // Generar nuevo token con rol actualizado
+        const token = jwt.sign(
+            {
+                idUsuario: usuario.idUsuario,
+                nombre: usuario.nombre,
+                rol: usuario.rol
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "2h" }
+        );
+
+        res.json({
+            msg: "Rol actualizado correctamente",
+            token
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Error al actualizar el rol" });
     }
-
-    const usuario = await Usuario.findByPk(usuarioId);
-
-    usuario.rol = nuevoRol;
-    await usuario.save();
-
-    return res.json({ message: "Rol actualizado", rol: nuevoRol });
-  } catch (error) {
-    console.log("Error al cambiar rol:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
-  }
 };
+
 
 // Ver perfil
 

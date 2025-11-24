@@ -2,6 +2,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 import Usuario from "./Usuario.js";
+import Album from "./Album.js";
 
 const Producto = sequelize.define("Producto", {
   idProducto: {
@@ -9,8 +10,15 @@ const Producto = sequelize.define("Producto", {
     autoIncrement: true,
     primaryKey: true,
   },
-  idVendedor: { type: DataTypes.STRING},
-  nombre: { type: DataTypes.STRING, allowNull: false },
+  idVendedor: { type: DataTypes.STRING },
+  IdAlbum: {
+  type: DataTypes.INTEGER,
+  references: {
+    model: Album,
+    key: "IdAlbum"
+  }
+},
+  nombreProducto: { type: DataTypes.STRING, allowNull: false },
   descripcion: { type: DataTypes.STRING },
   precio: { type: DataTypes.FLOAT, allowNull: false },
 
@@ -26,10 +34,15 @@ const Producto = sequelize.define("Producto", {
 
   // 🟧 Campos para mp3
   archivoUrl: { type: DataTypes.STRING },
+  trackNumber: {type: DataTypes.INTEGER,allowNull: true,}
 });
 
-// Relación: vendedor → productos
-Usuario.hasMany(Producto, { foreignKey: "vendedorId" });
-Producto.belongsTo(Usuario, { foreignKey: "vendedorId" });
+// Relación vendedor → productos
+Usuario.hasMany(Producto, { foreignKey: "idVendedor" });
+Producto.belongsTo(Usuario, { foreignKey: "idVendedor" });
+
+// Relación álbum → vinilos/mp3
+Album.hasMany(Producto, { foreignKey: "IdAlbum" });
+Producto.belongsTo(Album, { foreignKey: "IdAlbum" });
 
 export default Producto;

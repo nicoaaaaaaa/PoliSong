@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export const registrarUsuario = async (req, res) => {
   try {
-    const { nombre, correo, contraseña, rol } = req.body;
+    const { nombreUsuario, correo, contraseña, rol } = req.body;
     
     // Verificar si el usuario ya existe
 
@@ -23,7 +23,7 @@ export const registrarUsuario = async (req, res) => {
 }
     // Crear nuevo usuario
     const nuevoUsuario = await Usuario.create({
-      nombre,
+      nombreUsuario,
       correo: correoNormalizado,
       contraseña,
       rol
@@ -31,7 +31,7 @@ export const registrarUsuario = async (req, res) => {
 
     res.status(201).json({
       msg: "Usuario registrado exitosamente.",
-      usuario: { idUsuario: nuevoUsuario.idUsuario, nombre, correo, rol }
+      usuario: { idUsuario: nuevoUsuario.idUsuario, nombreUsuario, correo, rol }
     });
   } catch (error) {
     console.error(error);
@@ -57,7 +57,7 @@ export const iniciarSesion = async (req, res) => {
     const token = jwt.sign(
         {
             idUsuario: usuario.idUsuario,
-            nombre: usuario.nombre,
+            nombreUsuario: usuario.nombreUsuario,
             rol: usuario.rol
         },
         process.env.JWT_SECRET,
@@ -69,7 +69,7 @@ export const iniciarSesion = async (req, res) => {
       token,
       usuario: {
         idUsuario: usuario.idUsuario,
-        nombre: usuario.nombre,
+        nombreUsuario: usuario.nombreUsuario,
         correo: usuario.correo,
         rol: usuario.rol
       }
@@ -137,7 +137,7 @@ export const verPerfil = async (req, res) => {
     res.json({
       usuario: {
         idUsuario: usuario.idUsuario,
-        nombre: usuario.nombre,
+        nombreUsuario: usuario.nombreUsuario,
         correo: usuario.correo,
         rol: usuario.rol
       }

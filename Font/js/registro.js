@@ -1,8 +1,14 @@
+const token = localStorage.getItem("token");
+
+if (token) {
+    window.location.href = "catalogo.html";
+}
+
 document.getElementById("registroForm").addEventListener("submit", async e => {
     e.preventDefault();
 
     const data = {
-        nombre: e.target.nombre.value,
+        nombreUsuario: e.target.nombreUsuario.value,
         correo: e.target.correo.value,
         contraseña: e.target.contraseña.value
     };

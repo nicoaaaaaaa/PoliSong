@@ -11,13 +11,24 @@
 <nav>
     <a href="catalogo.html">Catálogo</a>
     <a href="panelVendedor.html">Panel Vendedor</a>
+    <a href="perfil.html">Perfil</a>
 </nav>
 
-<h1>Publicar Vinilo o Cancion</h1>
+<h1>Publicar Producto</h1>
 
 <button id="cambiarRol">Cambiar a vendedor</button>
 
-<form id="nuevoViniloForm">
+<hr>
+
+<select id="tipoPublicacion">
+    <option value="">-- Seleccionar qué publicar --</option>
+    <option value="vinilo">Vinilo</option>
+    <option value="mp3">Canción (MP3)</option>
+    <option value="album">Álbum completo</option>
+</select>
+
+
+<!-- <form id="nuevoViniloForm">
     <input type="text" name="nombre" placeholder="Nombre del vinilo" required>
     <input type="text" name="artista" placeholder="Artista" required>
     <input type="number" name="year" placeholder="Año" required>
@@ -29,21 +40,82 @@
     <textarea name="descripcion" placeholder="Descripción"></textarea>
 
     <button type="submit">Publicar</button>
-</form>
-
-<hr>
-
-<form id="nuevoMp3Form">
-    <input type="text" name="nombre" placeholder="Nombre de la Cancion" required>
+</form> -->
+<form id="nuevoViniloForm">
+<div id="formVinilo" style="display:none;">
+    <h2>Publicar Vinilo</h2>
+    
+    <div class="info-album" style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <small>💡 Si existe un álbum con los mismos datos, se asociará automáticamente</small>
+    </div>
+    
+    <input type="text" name="nombreProducto" placeholder="Nombre del vinilo" required>
     <input type="text" name="artista" placeholder="Artista" required>
     <input type="number" name="year" placeholder="Año" required>
     <input type="text" name="genero" placeholder="Género" required>
 
     <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    <input type="number" name="stock" placeholder="Stock" required>
+
+    <textarea name="descripcion" placeholder="Descripción"></textarea>
+
+    <button id="publicarVinilo">Publicar Vinilo</button>
+</div>
+</form>
+
+<!--  <form id="nuevoMp3Form">
+    <input type="text" name="nombre" placeholder="Nombre de la Cancion" required>
+    <input type="text" name="artista" placeholder="Artista" required>
+    <input type="number" name="year" placeholder="Año" required>
+    <input type="text" name="genero" placeholder="Género" required>
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
     <input type="file" name="archivoUrl" placeholder="Mp3" required>
 
     <button type="submit">Publicar</button>
+</form> -->
+
+<form id="nuevoMp3Form">
+<div id="formMp3" style="display:none;">
+    <h2>Publicar Canción MP3</h2>
+
+    <input type="text" name="nombreProducto" placeholder="Nombre de la Cancion" required>
+    <input type="text" name="artista" placeholder="Artista" required>
+    <input type="number" name="year" placeholder="Año" required>
+    <input type="text" name="genero" placeholder="Género" required>
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    
+    <label>Archivo MP3</label>
+    <input type="file" name="archivoUrl" accept=".mp3" required>
+
+    <select name="albumMp3" id="albumMp3">
+        <option value="">Asociar a álbum</option>
+    </select>
+
+    <button id="publicarMp3">Publicar MP3</button>
+</div>
 </form>
+
+<form id="nuevoAlbum">
+<div id="formAlbum" style="display:none;">
+    <h2>Crear Álbum Completo</h2>
+
+    <input type="text" id="albumNombre" placeholder="Nombre del álbum" required>
+    <input type="text" id="albumArtista" placeholder="Artista" required>
+    <input type="number" id="albumYear" placeholder="Año" required>
+    <input type="text" id="albumGenero" placeholder="Género" required>
+
+    <label>Cantidad de canciones</label>
+    <input type="number" id="cantidadTracks" min="1" max="30" value="1">
+
+    <button id="generarTracks">Generar espacios</button>
+
+    <div id="contenedorTracks"></div>
+
+    <button id="publicarAlbum" type="submit">Publicar Álbum</button>
+</div>
+</form>
+
+
 
 <script src="js/panelVendedor.js"></script>
 </body>

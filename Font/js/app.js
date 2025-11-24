@@ -48,7 +48,7 @@ document.getElementById("mostrarUsuarios").addEventListener("click", async () =>
 
         fila.innerHTML = `
             <td>${usuario.idUsuario}</td>
-            <td>${usuario.nombre}</td>
+            <td>${usuario.nombreUsuario}</td>
             <td>${usuario.correo}</td>
             <td>${usuario.rol}</td>
         `;
@@ -98,13 +98,23 @@ document.getElementById("mostrarProductos").addEventListener("click", async () =
 
     productos.forEach(productos => {
         const fila = document.createElement("tr");
+        
+        if(productos.tipo == "vinilo"){
 
-        fila.innerHTML = `
+            fila.innerHTML = `
             <td>${productos.idProducto}</td>
-            <td>${productos.nombre}</td>
+            <td>${productos.nombreProducto}</td>
             <td>${productos.artista}</td>
             <td>${productos.idVendedor}</td>
         `;
+        } else {
+            fila.innerHTML = `
+            <td>${productos.idProducto}</td>
+            <td>${productos.nombreProducto}</td>
+            <td>${productos.artista}</td>
+            <td>No aplica</td>
+        `;
+        }
 
         tbody.appendChild(fila);
     });

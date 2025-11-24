@@ -1,16 +1,17 @@
 // src/routes/productoRoutes.js
 import Producto from "../models/Producto.js";
-import { Router } from "express";
+import express from "express";
 import { publicarmp3, publicarVinilo } from "../controllers/productoController.js";
 import { isVendedor } from "../middleware/isVendedor.js";
 import autenticado from "../middleware/autenticado.js";
+import uploadSingle from "../middleware/upload.js";
 
-const router = Router();
+const router = express.Router();
 
 // Solo vendedores pueden publicar
 router.post("/publicarV", autenticado, isVendedor, publicarVinilo);
 
-router.post("/publicarM", autenticado, isVendedor, publicarmp3)
+router.post("/publicarM", autenticado, isVendedor, uploadSingle.single("archivo"),publicarmp3)
 
 router.get("/ver", async (req, res) => {
   try {

@@ -1,7 +1,7 @@
 const token = localStorage.getItem("token");
 
 if (token) {
-    window.location.href = "dashboard.html";
+    window.location.href = "catalogo.html";
 }
 
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -29,5 +29,5 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     localStorage.setItem("token", data.token);
 
     // Redirigir al dashboard
-    window.location.href = "/dashboard.html";
+    window.location.href = "/catalogo.html";
 });

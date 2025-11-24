@@ -41,7 +41,7 @@ async function cargarPerfil(token) {
         console.log("Sesión validada por el servidor:", data);
 
         // Mostrar datos en el dashboard
-        document.getElementById("nombreUsuario").textContent = data.usuario.nombre;
+        document.getElementById("nombreUsuario").textContent = data.usuario.nombreUsuario;
         document.getElementById("rolUsuario").textContent = data.usuario.rol;
 
     } catch (error) {

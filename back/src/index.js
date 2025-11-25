@@ -6,6 +6,9 @@ import { verificarIntegridad } from "./controllers/debugController.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import productoRoutes from "./routes/productoRoutes.js";
 import albumRoutes from "./routes/albumRoutes.js";
+import carritoRoutes from "./routes/carritoRoutes.js"
+import pedidoRoutes from "./routes/pedidoRoutes.js"
+import "./models/Associations.js"
 import path from "path";
 import { fileURLToPath } from 'url';
 
@@ -68,7 +71,11 @@ app.use("/api/usuarios", usuarioRoutes);
 
 app.use("/api/productos", productoRoutes);
 
-app.use("/api/albumes",albumRoutes)
+app.use("/api/albumes",albumRoutes);
+
+app.use("/api/carrito", carritoRoutes);
+
+app.use("/api/pedidos", pedidoRoutes);
 
 app.use("/uploads", express.static(path.join(projectRoot, "uploads")));
 

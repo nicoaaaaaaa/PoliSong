@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     verificar(token);
+    cargarCatalogo();
 });
 
 async function verificar(token) {
@@ -40,41 +41,101 @@ async function verificar(token) {
 }
 
 async function cargarCatalogo() {
-    const res = await fetch("/api/productos/ver");
-    const productos = await res.json();
+    // 1. Cargar productos (vinilos y mp3)
+    const resProd = await fetch("/api/productos/ver");
+    const productos = await resProd.json();
 
-    const contenedor = document.getElementById("catalogo");
-    contenedor.innerHTML = "";
+    // 2. Cargar álbumes
+    const resAlb = await fetch("/api/albumes/ver");
+    const albumes = await resAlb.json();
 
-    productos.forEach(p => {
-        contenedor.innerHTML += renderProducto(p);
+    renderVinilos(productos.filter(p => p.tipo === "vinilo"));
+    renderCanciones(productos.filter(p => p.tipo === "mp3"));
+    renderAlbumes(albumes);
+}
+
+function renderVinilos(vinilos) {
+    const cont = document.getElementById("vinilos");
+
+    vinilos.forEach(v => {
+        cont.innerHTML += `
+        <div class="item">
+            <h3>${v.nombreProducto}</h3>
+            <p>Artista: ${v.artista}</p>
+            <p>Precio: $${v.precio}</p>
+            <p>Stock: ${v.stock}</p>
+            <button onclick="verProducto(${v.idProducto})">Ver</button>
+            <button onclick="agregarCarrito(${v.idProducto})">Agregar al carrito</button>
+        </div>`;
     });
 }
 
-function renderProducto(p) {
-    let html = `
-    <div class="producto">
-        <h2>${p.nombreProducto}</h2>
-        <p>Artista: ${p.artista || "N/A"}</p>
-        <p>Género: ${p.genero || "N/A"}</p>
-        <p>Precio: $${p.precio}</p>
-    `;
+function renderCanciones(canciones) {
+    const cont = document.getElementById("canciones");
 
-    // Si es mp3, mostrará un reproductor
-    if (p.tipo === "mp3" && p.archivoUrl) {
-        html += `
-            <audio controls>
-                <source src="${p.archivoUrl}" type="audio/mpeg">
-                Tu navegador no soporta reproducir audio.
-            </audio>
-        `;
-    }
+    canciones.forEach(c => {
+        cont.innerHTML += `
+        <div class="item">
+            <h3>${c.nombreProducto}</h3>
+            <p>Artista: ${c.artista}</p>
+            <p>Precio: $${c.precio}</p>
 
-    html += `</div>`;
+            ${c.archivoUrl ? `
+                <audio controls>
+                    <source src="${c.archivoUrl}" type="audio/mpeg">
+                </audio>
+            ` : ""}
 
-    return html;
+            <button onclick="verProducto(${c.idProducto})">Ver</button>
+            <button onclick="agregarCarrito(${c.idProducto})">Agregar al carrito</button>
+        </div>`;
+    });
 }
 
-console.log("Token guardado:", localStorage.getItem("token"));
+function renderAlbumes(albumes) {
+    const cont = document.getElementById("albumes");
 
-cargarCatalogo();
+    albumes.forEach(a => {
+        const canciones = a.Productos.filter(p => p.tipo === "mp3").length;
+        const vinilo = a.Productos.some(p => p.tipo === "vinilo");
+
+        cont.innerHTML += `
+        <div class="item">
+            <h3>${a.nombreAlbum}</h3>
+            <p>Artista: ${a.artistaAlbum}</p>
+            <p>Año: ${a.yearAlbum}</p>
+            <p>Género: ${a.generoAlbum}</p>
+
+            <p>${canciones} canciones</p>
+            <p>${vinilo ? "Vinilo disponible" : "Sin vinilo"}</p>
+
+            <button onclick="verAlbum(${a.idAlbum})">Ver álbum</button>
+        </div>`;
+    });
+}
+
+// Navegación
+function verProducto(id) {
+    window.location.href = `producto.html?id=${id}`;
+}
+
+function verAlbum(id) {
+    window.location.href = `album.html?id=${id}`;
+}
+
+function agregarCarrito(idProducto) {
+    const token = localStorage.getItem("token");
+    if (!token) return window.location.href = "login.html";
+
+    fetch("/api/carrito/agregar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ idProducto })
+    }).then(res => {
+        if (res.ok) alert("Producto agregado al carrito");
+        else alert("Error al agregar");
+    });
+}

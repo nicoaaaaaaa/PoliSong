@@ -91,3 +91,27 @@ export const obtenerAlbumes = async (req, res) => {
   }
 };
 
+export const obtenerAlbumPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const album = await Album.findByPk(id, {
+      include: [{
+        model: Producto,
+        as: 'Productos'
+      }]
+    });
+
+    if (!album) {
+      return res.status(404).json({ msg: "Álbum no encontrado" });
+    }
+
+    res.json(album);
+
+  } catch (err) {
+    console.error("Error al obtener álbum:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+

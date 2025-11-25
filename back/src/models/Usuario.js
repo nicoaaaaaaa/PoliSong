@@ -1,5 +1,6 @@
 // src/models/Usuario.js
 import { DataTypes } from "sequelize";
+//import Carrito from "./Carrito.js";
 import sequelize from "../db/connection.js";
 
 const Usuario = sequelize.define("Usuario", {
@@ -13,5 +14,7 @@ const Usuario = sequelize.define("Usuario", {
     defaultValue: "comprador"
   }
 });
+
+/*Usuario.hasMany(Carrito, { foreignKey: "idUsuario" });*/
 
 export default Usuario;

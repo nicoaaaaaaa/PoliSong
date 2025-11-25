@@ -23,6 +23,19 @@ router.get("/ver", async (req, res) => {
   }
 });
 
+router.get("/ver/:id", async (req, res) => {
+  try {
+    const productos = await Producto.findByPk(req.params.id);
+    if(!productos){
+      return res.status(404).json({ msg: "Producto no encontrado" });
+    }
+    res.json(productos);
+  } catch (error) {
+    console.error("Error al obtener productos:", error);
+    res.status(500).json({ msg: "Error al obtener productos" });
+  }
+});
+
 router.delete("/e", async (req, res) => {
   try {
     await Producto.destroy({

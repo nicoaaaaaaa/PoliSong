@@ -3,6 +3,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 import Usuario from "./Usuario.js";
 import Album from "./Album.js";
+//import Carrito from "./Carrito.js";
 
 const Producto = sequelize.define("Producto", {
   idProducto: {
@@ -44,5 +45,10 @@ Producto.belongsTo(Usuario, { foreignKey: "idVendedor" });
 // Relación álbum → vinilos/mp3
 Album.hasMany(Producto, { foreignKey: "IdAlbum" });
 Producto.belongsTo(Album, { foreignKey: "IdAlbum" });
+
+/*Producto.hasMany(Carrito, {
+  foreignKey: "idProducto",
+  as: "carritos"
+});*/
 
 export default Producto;

@@ -1,10 +1,38 @@
-class Pedido {
-    constructor(idPedido, idComprador) {
-        this.idPedido = idPedido;
-        this.idComprador = idComprador;
-        this.fechaPedido = new Date();
-        this.estado = "Pendiente";
-        this.items = [];  // Lista de items (pueden ser objetos)
-        this.total = 0.0;
-    }
-}
+import { DataTypes } from "sequelize";
+import sequelize from "../db/connection.js";
+import Usuario from "./Usuario.js";
+
+const Pedido = sequelize.define("Pedido", {
+
+  idPedido: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+
+  idUsuario: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+
+  idVendedor: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+
+  estado: {
+    type: DataTypes.ENUM("pendiente", "aprobado", "rechazado"),
+    defaultValue: "pendiente"
+  },
+
+  total: {
+    type: DataTypes.FLOAT,
+    allowNull: false
+  }
+
+});
+
+Pedido.belongsTo(Usuario, { foreignKey: "idUsuario", as: "Comprador" });
+Pedido.belongsTo(Usuario, { foreignKey: "idVendedor", as: "Vendedor" });
+
+export default Pedido;

@@ -53,13 +53,18 @@
     <input type="text" name="artista" placeholder="Artista" required>
     <input type="number" name="year" placeholder="Año" required>
     <input type="text" name="genero" placeholder="Género" required>
-
     <input type="number" name="precio" placeholder="Precio" step="0.01" required>
     <input type="number" name="stock" placeholder="Stock" required>
-
     <textarea name="descripcion" placeholder="Descripción"></textarea>
 
-    <button id="publicarVinilo">Publicar Vinilo</button>
+    <!-- ✅ NUEVO: Campo para imagen del vinilo -->
+    <div class="form-group">
+        <label for="imagenVinilo">Imagen del Vinilo (opcional):</label>
+        <input type="file" id="imagenVinilo" name="imagen" accept="image/*">
+        <small>Formatos: JPG, PNG, GIF, WebP (máx. 5MB)</small>
+    </div>
+
+    <button id="publicarVinilo" type="submit">Publicar Vinilo</button>
 </div>
 </form>
 
@@ -84,14 +89,12 @@
     <input type="text" name="genero" placeholder="Género" required>
     <input type="number" name="precio" placeholder="Precio" step="0.01" required>
     
-    <label>Archivo MP3</label>
-    <input type="file" name="archivoUrl" accept=".mp3" required>
+    <div class="form-group">
+        <label>Archivo MP3</label>
+        <input type="file" name="archivoUrl" accept=".mp3" required>
+    </div>
 
-    <select name="albumMp3" id="albumMp3">
-        <option value="">Asociar a álbum</option>
-    </select>
-
-    <button id="publicarMp3">Publicar MP3</button>
+    <button id="publicarMp3" type="submit">Publicar MP3</button>
 </div>
 </form>
 
@@ -104,10 +107,18 @@
     <input type="number" id="albumYear" placeholder="Año" required>
     <input type="text" id="albumGenero" placeholder="Género" required>
 
-    <label>Cantidad de canciones</label>
-    <input type="number" id="cantidadTracks" min="1" max="30" value="1">
+    <!-- ✅ NUEVO: Campo para imagen del álbum -->
+    <div class="form-group">
+        <label for="imagenAlbum">Imagen del Álbum (opcional):</label>
+        <input type="file" id="imagenAlbum" name="imagenAlbum" accept="image/*">
+        <small>Formatos: JPG, PNG, GIF, WebP (máx. 5MB)</small>
+    </div>
 
-    <button id="generarTracks">Generar espacios</button>
+    <div class="form-group">
+        <label for="cantidadTracks">Cantidad de canciones:</label>
+        <input type="number" id="cantidadTracks" min="1" max="30" value="1">
+        <button type="button" id="generarTracks">Generar espacios</button>
+    </div>
 
     <div id="contenedorTracks"></div>
 

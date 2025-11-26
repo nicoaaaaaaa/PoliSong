@@ -12,11 +12,11 @@ const Producto = sequelize.define("Producto", {
     primaryKey: true,
   },
   idVendedor: { type: DataTypes.STRING },
-  IdAlbum: {
+  idAlbum: {
   type: DataTypes.INTEGER,
   references: {
     model: Album,
-    key: "IdAlbum"
+    key: "idAlbum"
   }
 },
   nombreProducto: { type: DataTypes.STRING, allowNull: false },
@@ -32,6 +32,10 @@ const Producto = sequelize.define("Producto", {
   genero: { type: DataTypes.STRING, allowNull: false },
   // 🟦 Campos para vinilo
   stock: { type: DataTypes.INTEGER, defaultValue: 0 },
+  imagenUrl: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
 
   // 🟧 Campos para mp3
   archivoUrl: { type: DataTypes.STRING },
@@ -43,8 +47,8 @@ Usuario.hasMany(Producto, { foreignKey: "idVendedor" });
 Producto.belongsTo(Usuario, { foreignKey: "idVendedor" });
 
 // Relación álbum → vinilos/mp3
-Album.hasMany(Producto, { foreignKey: "IdAlbum" });
-Producto.belongsTo(Album, { foreignKey: "IdAlbum" });
+Album.hasMany(Producto, { foreignKey: "idAlbum" });
+Producto.belongsTo(Album, { foreignKey: "idAlbum" });
 
 /*Producto.hasMany(Carrito, {
   foreignKey: "idProducto",

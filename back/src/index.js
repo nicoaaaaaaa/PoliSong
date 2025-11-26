@@ -8,9 +8,12 @@ import productoRoutes from "./routes/productoRoutes.js";
 import albumRoutes from "./routes/albumRoutes.js";
 import carritoRoutes from "./routes/carritoRoutes.js"
 import pedidoRoutes from "./routes/pedidoRoutes.js"
+import notificacionRoutes from "./routes/notificacionRoutes.js"
 import "./models/Associations.js"
 import path from "path";
 import { fileURLToPath } from 'url';
+import autenticado from "./middleware/autenticado.js";
+import { obtenerNotificaciones } from "./controllers/notificacionController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,8 +22,20 @@ const projectRoot = path.join(__dirname, '..');
 dotenv.config();
 const app = express();
 app.use(cors());
-app.use(express.json());
 
+
+// En index.js, después de app.use(cors());
+app.use((req, res, next) => {
+  console.log('=== INICIO REQUEST ===');
+  console.log('URL:', req.url);
+  console.log('Method:', req.method);
+  console.log('Content-Type:', req.get('Content-Type'));
+  console.log('Content-Length:', req.get('Content-Length'));
+  console.log('=== FIN REQUEST ===');
+  next();
+});
+
+//app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../../Font")));
 
@@ -65,7 +80,7 @@ app.get("/", (req, res) => {
   res.send("Servidor activo 🎶");
 });
 
-app.get('/estado-db', verificarIntegridad);
+/*app.get('/estado-db', verificarIntegridad);
 
 app.use("/api/usuarios", usuarioRoutes);
 
@@ -77,8 +92,22 @@ app.use("/api/carrito", carritoRoutes);
 
 app.use("/api/pedidos", pedidoRoutes);
 
-app.use("/uploads", express.static(path.join(projectRoot, "uploads")));
+app.use("/api/notificaciones", notificacionRoutes);
 
+app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
+
+app.use('/uploads/mp3', express.static(path.join(__dirname, 'uploads', 'mp3')));*/
+
+app.use("/api/usuarios", express.json(), usuarioRoutes);
+app.use("/api/carrito", express.json(), carritoRoutes);
+app.use("/api/pedidos", express.json(), pedidoRoutes);
+app.use("/api/notificaciones", express.json(), notificacionRoutes);
+
+app.use("/api/productos", productoRoutes);
+app.use("/api/albumes", albumRoutes);
+
+app.use('/uploads/images', express.static(path.join(projectRoot, 'uploads', 'images')));
+app.use('/uploads/mp3', express.static(path.join(projectRoot, 'uploads', 'mp3')));
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

@@ -12,15 +12,38 @@ export const crearAlbum = async (req, res) => {
     }
     
     const canciones = JSON.parse(req.body.canciones);
+    const archivos = req.files;
+
+    let imagenUrl = "";
+    if (req.file) {
+      imagenUrl = `/uploads/images/${req.file.filename}`;
+    }
 
     const album = await Album.create({
       nombreAlbum,
       artistaAlbum,
       yearAlbum,
-      generoAlbum
+      generoAlbum,
+      imagenUrl: ""
     });
 
-    const archivos = req.files;
+    const imagenAlbumFile = archivos.find(file => file.fieldname === 'imagenAlbum');
+    if (imagenAlbumFile) {
+      const nuevoNombreImagen = `${album.idAlbum}_${nombreAlbum.replace(/[^a-z0-9]/gi, "_")}.png`;
+      const oldPathImagen = imagenAlbumFile.path;
+      const newPathImagen = path.join(path.dirname(oldPathImagen), nuevoNombreImagen);
+
+      // Renombrar archivo
+      fs.renameSync(oldPathImagen, newPathImagen);
+
+      // ✅ ACTUALIZAR ÁLBUM CON LA URL FINAL
+      album.imagenUrl = `/uploads/images/${nuevoNombreImagen}`;
+      await album.save();
+      
+      console.log(`✅ Imagen de álbum renombrada: ${imagenAlbumFile.filename} → ${nuevoNombreImagen}`);
+    }
+
+    
 
     if (!archivos || archivos.length === 0) {
         return res.status(400).json({ error: "No se subieron archivos MP3" });
@@ -47,7 +70,7 @@ export const crearAlbum = async (req, res) => {
         genero: cancion.genero || generoAlbum,
         archivoUrl: "",
         trackNumber: i + 1,
-        IdAlbum: album.idAlbum, // Asegurar que el nombre coincide con el modelo
+        idAlbum: album.idAlbum, // Asegurar que el nombre coincide con el modelo
       });
       // Generar nuevo nombre con ID + nombre canción
       const nuevoNombre = `${producto.idProducto}_${cancion.nombre.replace(/[^a-z0-9]/gi, "_")}.mp3`;

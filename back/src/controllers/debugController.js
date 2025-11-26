@@ -10,17 +10,17 @@ export const verificarIntegridad = async (req, res) => {
 
     // Productos con IdAlbum pero sin álbum existente
     const productosHuerfanos = await sequelize.query(`
-      SELECT p."idProducto", p."nombreProducto", p."IdAlbum"
+      SELECT p."idProducto", p."nombreProducto", p."idAlbum"
       FROM "Productos" p
-      LEFT JOIN "Albums" a ON p."IdAlbum" = a."idAlbum"
-      WHERE p."IdAlbum" IS NOT NULL AND a."idAlbum" IS NULL
+      LEFT JOIN "Albums" a ON p."idAlbum" = a."idAlbum"
+      WHERE p."idAlbum" IS NOT NULL AND a."idAlbum" IS NULL
     `, { type: sequelize.QueryTypes.SELECT });
 
     // Álbumes sin productos
     const albumesVacios = await sequelize.query(`
       SELECT a."idAlbum", a."nombreAlbum"
       FROM "Albums" a
-      LEFT JOIN "Productos" p ON a."idAlbum" = p."IdAlbum"
+      LEFT JOIN "Productos" p ON a."idAlbum" = p."idAlbum"
       WHERE p."idProducto" IS NULL
     `, { type: sequelize.QueryTypes.SELECT });
 
@@ -28,7 +28,7 @@ export const verificarIntegridad = async (req, res) => {
     const totalAlbumes = await Album.count();
     const totalProductos = await Producto.count();
     const productosConAlbum = await Producto.count({ 
-      where: { IdAlbum: { [Op.ne]: null } } 
+      where: { idAlbum: { [Op.ne]: null } } 
     });
 
     const resultado = {
@@ -60,9 +60,9 @@ export const repararBaseDatos = async (req, res) => {
     // Reparar productos huerfanos (IdAlbum que no existe)
     const [resultado] = await sequelize.query(`
       UPDATE "Productos" 
-      SET "IdAlbum" = NULL 
-      WHERE "IdAlbum" IS NOT NULL 
-      AND "IdAlbum" NOT IN (SELECT "idAlbum" FROM "Albums")
+      SET "idAlbum" = NULL 
+      WHERE "idAlbum" IS NOT NULL 
+      AND "idAlbum" NOT IN (SELECT "idAlbum" FROM "Albums")
     `);
 
     console.log(`✅ Reparación completada: ${resultado} productos reparados`);

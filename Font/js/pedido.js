@@ -15,7 +15,7 @@ async function cargarResumen() {
     div.innerHTML = "";
 
     items.forEach(i => {
-        const p = i.Producto;
+        const p = i.producto;
         total += p.precio * i.cantidad;
 
         div.innerHTML += `
@@ -36,6 +36,14 @@ document.getElementById("btn-confirmar").onclick = async () => {
 
     const data = await res.json();
 
+    if (!res.ok) {
+        alert("Error al crear pedido");
+        return;
+    }
+
+    const idPedido = data.idPedido;
+
     alert("Pedido creado con éxito");
-    window.location.href = "confirmacion.html";
+
+    window.location.href = `confirmacion.html?id=${idPedido}`;
 };

@@ -5,11 +5,12 @@ import { publicarmp3, publicarVinilo } from "../controllers/productoController.j
 import { isVendedor } from "../middleware/isVendedor.js";
 import autenticado from "../middleware/autenticado.js";
 import uploadSingle from "../middleware/upload.js";
+import uploadImage from "../middleware/uploadImages.js";
 
 const router = express.Router();
 
 // Solo vendedores pueden publicar
-router.post("/publicarV", autenticado, isVendedor, publicarVinilo);
+router.post("/publicarV", autenticado, isVendedor, uploadImage.single('imagen'),publicarVinilo);
 
 router.post("/publicarM", autenticado, isVendedor, uploadSingle.single("archivo"),publicarmp3)
 

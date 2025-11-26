@@ -8,10 +8,31 @@ import { Op } from 'sequelize';
 export const publicarVinilo = async (req, res) => {
 
   try {
+    console.log("📥 Body recibido:", req.body);
+    console.log("📁 Archivo recibido:", req.file);
+
+    // ✅ VERIFICAR SI req.body ESTÁ VACÍO
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ 
+        error: "Datos del formulario no recibidos. ¿Estás usando FormData en el frontend?" 
+      });
+    }
     //const { idUsuario, nombre, precio, artista, año, genero, stock, descripcion } = req.body;
 
     const { idVendedor, nombreProducto, precio, artista, year, genero, stock, descripcion } = req.body;
     
+    if (!idVendedor || !nombreProducto || !precio || !artista || !year || !genero || !stock) {
+      return res.status(400).json({ 
+        error: "Faltan campos requeridos",
+        camposRecibidos: req.body
+      });
+    }
+
+    let imagenUrl = "";
+    if (req.file) {
+      imagenUrl = `/uploads/images/${req.file.filename}`;
+    }
+
     const albumCoincidente = await Album.findOne({
       where: {
         nombreAlbum: nombreProducto, // El nombre del vinilo = nombre del álbum
@@ -21,14 +42,14 @@ export const publicarVinilo = async (req, res) => {
       }
     });
 
-    let IdAlbum = null;
+    let idAlbum = null;
     let mensajeExtra = "";
 
     if (albumCoincidente) {
-      IdAlbum = albumCoincidente.idAlbum;
+      idAlbum = albumCoincidente.idAlbum;
       mensajeExtra = ` y asociado automáticamente al álbum "${albumCoincidente.nombreAlbum}"`;
       
-      console.log(`✅ Vinilo asociado automáticamente al álbum ID: ${IdAlbum}`);
+      console.log(`✅ Vinilo asociado automáticamente al álbum ID: ${idAlbum}`);
     } else {
       console.log("ℹ️ No se encontró álbum coincidente para asociar automáticamente");
     }
@@ -42,7 +63,8 @@ export const publicarVinilo = async (req, res) => {
       year,
       genero,
       stock,
-      IdAlbum: IdAlbum || null,
+      imagenUrl: "",
+      idAlbum: idAlbum || null,
       idVendedor,
     });
 
@@ -70,6 +92,17 @@ export const publicarVinilo = async (req, res) => {
       descripcion
     });*/
 
+    const nuevoNombre = `${nuevo.idProducto}_${nombreProducto.replace(/[^a-z0-9]/gi, "_")}.png`;
+
+    const oldPath = req.file.path;
+    const newPath = path.join(path.dirname(oldPath), nuevoNombre);
+
+    // Renombrar archivo en la carpeta
+    fs.renameSync(oldPath, newPath);
+
+    // Actualizar producto con la URL final
+    nuevo.imagenUrl = `/uploads/images/${nuevoNombre}`;
+    await nuevo.save();
 
     res.json({
       mensaje: "Vinilo publicado correctamente",
@@ -116,7 +149,7 @@ export const publicarVinilo = async (req, res) => {
 
 export const publicarmp3 = async (req, res) => {
   try {
-    const { nombreProducto, precio, artista, year, genero, trackNumber, IdAlbum } = req.body;
+    const { nombreProducto, precio, artista, year, genero, trackNumber, idAlbum } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ error: "No se subió ningún archivo MP3" });
@@ -132,7 +165,7 @@ export const publicarmp3 = async (req, res) => {
       genero,
       archivoUrl: "", // temporal
       trackNumber,
-      IdAlbum
+      idAlbum
     });
 
     // Nuevo nombre basado en id + nombre canción
@@ -156,4 +189,38 @@ export const publicarmp3 = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+export const obtenerProductos = async (req, res) => {
+    try {
+        const productos = await Producto.findAll({
+            include: [{
+                model: Album,
+                as: 'Album' // Asegúrate de que esta asociación exista
+            }]
+        });
+        res.json(productos);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const obtenerProductoPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const producto = await Producto.findByPk(id, {
+            include: [{
+                model: Album,
+                as: 'Album'
+            }]
+        });
+
+        if (!producto) {
+            return res.status(404).json({ msg: "Producto no encontrado" });
+        }
+
+        res.json(producto);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };

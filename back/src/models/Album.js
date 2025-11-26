@@ -10,7 +10,11 @@ const Album = sequelize.define("Album", {
   nombreAlbum: { type: DataTypes.STRING, allowNull: false },
   artistaAlbum: { type: DataTypes.STRING, allowNull: false },
   yearAlbum: { type: DataTypes.INTEGER, allowNull: false },
-  generoAlbum: { type: DataTypes.STRING, allowNull: false }
+  generoAlbum: { type: DataTypes.STRING, allowNull: false },
+  imagenUrl: {
+    type: DataTypes.STRING,
+    allowNull: true
+  }
 });
 
 export default Album;

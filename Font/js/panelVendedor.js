@@ -81,17 +81,21 @@ document.getElementById("nuevoViniloForm").addEventListener("submit", async e =>
     return;
     }
 
-    const data = {
-        idVendedor: payload.idUsuario,
-        nombreProducto: e.target.nombreProducto.value,
-        precio: e.target.precio.value,
-        artista: e.target.artista.value,
-        year: e.target.year.value,
-        genero: e.target.genero.value,
-        stock: e.target.stock.value,
-        descripcion: e.target.descripcion.value,
-        tipo: "vinilo"
-    };
+    const formData = new FormData();
+    formData.append("idVendedor", payload.idUsuario);
+    formData.append("nombreProducto", e.target.nombreProducto.value);
+    formData.append("precio", e.target.precio.value);
+    formData.append("artista", e.target.artista.value);
+    formData.append("year", e.target.year.value);
+    formData.append("genero", e.target.genero.value);
+    formData.append("stock", e.target.stock.value);
+    formData.append("descripcion", e.target.descripcion.value);
+    formData.append("tipo", "vinilo");
+
+    const imagenFile = e.target.imagenVinilo?.files[0];
+    if (imagenFile) {
+        formData.append("imagen", imagenFile);
+    }
 
     const btn = document.getElementById("publicarVinilo");
     const originalText = btn.textContent;
@@ -102,10 +106,9 @@ document.getElementById("nuevoViniloForm").addEventListener("submit", async e =>
         const res = await fetch("/api/productos/publicarV", {
             method: "POST",
             headers: { 
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`  
             },
-            body: JSON.stringify(data)
+            body: formData
         });
 
         const json = await res.json();
@@ -201,6 +204,11 @@ document.getElementById("nuevoAlbum").addEventListener("submit", async (e) => {
     formData.append("artistaAlbum", document.getElementById("albumArtista").value);
     formData.append("yearAlbum", document.getElementById("albumYear").value);
     formData.append("generoAlbum", document.getElementById("albumGenero").value);
+
+    const imagenAlbum = document.getElementById("imagenAlbum")?.files[0];
+    if (imagenAlbum) {
+        formData.append("imagenAlbum", imagenAlbum);
+    }
 
     // Procesar canciones
     const canciones = [];

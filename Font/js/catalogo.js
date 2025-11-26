@@ -56,60 +56,117 @@ async function cargarCatalogo() {
 
 function renderVinilos(vinilos) {
     const cont = document.getElementById("vinilos");
+    cont.innerHTML = ""; // Limpiar antes de renderizar
 
     vinilos.forEach(v => {
-        cont.innerHTML += `
-        <div class="item">
-            <h3>${v.nombreProducto}</h3>
-            <p>Artista: ${v.artista}</p>
-            <p>Precio: $${v.precio}</p>
-            <p>Stock: ${v.stock}</p>
-            <button onclick="verProducto(${v.idProducto})">Ver</button>
-            <button onclick="agregarCarrito(${v.idProducto})">Agregar al carrito</button>
-        </div>`;
+        const productCard = document.createElement("div");
+        productCard.style.border = "1px solid #ddd";
+        productCard.style.borderRadius = "8px";
+        productCard.style.padding = "16px";
+        productCard.style.margin = "10px";
+        productCard.style.background = "white";
+        productCard.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+        productCard.style.maxWidth = "300px";
+        productCard.style.display = "inline-block";
+        
+        console.log("IMAGEN:", v.imagenUrl);
+
+        productCard.innerHTML = `
+            ${v.imagenUrl ? `
+                <img src="${v.imagenUrl}"
+     alt="${v.nombreProducto}"
+     class="product-image"
+     onerror="
+        console.error('No se pudo cargar:', this.src);
+        this.onerror=null;
+        this.src='https://via.placeholder.com/200x200?text=Sin+Imagen';
+     ">
+
+
+            ` : `
+                <div class="product-image placeholder">🎵</div>
+            `}
+            <div class="product-info">
+                <h3>${v.nombreProducto}</h3>
+                <p><strong>Artista:</strong> ${v.artista}</p>
+                <p><strong>Precio:</strong> $${v.precio}</p>
+                ${v.stock ? `<p><strong>Stock:</strong> ${v.stock}</p>` : ''}
+
+                ${v.archivoUrl ? `
+                    <audio controls class="small-audio">
+                        <source src="${v.archivoUrl}" type="audio/mpeg">
+                    </audio>
+                ` : ""}
+
+                <div class="product-actions">
+                    <button onclick="verProducto(${v.idProducto})" class="btn-small">Ver</button>
+                    <button onclick="agregarCarrito(${v.idProducto})" class="btn-small btn-primary">Agregar al carrito</button>
+                </div>
+            </div>
+        `;
+        
+        cont.appendChild(productCard);
     });
 }
 
 function renderCanciones(canciones) {
     const cont = document.getElementById("canciones");
+    cont.innerHTML = "";
 
     canciones.forEach(c => {
         cont.innerHTML += `
-        <div class="item">
-            <h3>${c.nombreProducto}</h3>
-            <p>Artista: ${c.artista}</p>
-            <p>Precio: $${c.precio}</p>
+        <div class="item product-card">
+            ${c.Album && c.Album.imagenUrl ? `
+            <img src="${c.Album.imagenUrl}" alt="${c.Album.nombreAlbum}" class="product-image">
+        ` : `
+            <div class="product-image placeholder">🎵</div>
+        `}
+            <div class="product-info">
+                <h3>${c.nombreProducto}</h3>
+                <p><strong>Artista:</strong> ${c.artista}</p>
+                <p><strong>Precio:</strong> $${c.precio}</p>
 
-            ${c.archivoUrl ? `
-                <audio controls>
-                    <source src="${c.archivoUrl}" type="audio/mpeg">
-                </audio>
-            ` : ""}
+                ${c.archivoUrl ? `
+                    <audio controls class="small-audio">
+                        <source src="${c.archivoUrl}" type="audio/mpeg">
+                    </audio>
+                ` : ""}
 
-            <button onclick="verProducto(${c.idProducto})">Ver</button>
-            <button onclick="agregarCarrito(${c.idProducto})">Agregar al carrito</button>
+                <div class="product-actions">
+                    <button onclick="verProducto(${c.idProducto})" class="btn-small">Ver</button>
+                    <button onclick="agregarCarrito(${c.idProducto})" class="btn-small btn-primary">Agregar al carrito</button>
+                </div>
+            </div>
         </div>`;
     });
 }
 
+
 function renderAlbumes(albumes) {
     const cont = document.getElementById("albumes");
+    cont.innerHTML = "";
 
     albumes.forEach(a => {
         const canciones = a.Productos.filter(p => p.tipo === "mp3").length;
         const vinilo = a.Productos.some(p => p.tipo === "vinilo");
 
         cont.innerHTML += `
-        <div class="item">
-            <h3>${a.nombreAlbum}</h3>
-            <p>Artista: ${a.artistaAlbum}</p>
-            <p>Año: ${a.yearAlbum}</p>
-            <p>Género: ${a.generoAlbum}</p>
-
-            <p>${canciones} canciones</p>
-            <p>${vinilo ? "Vinilo disponible" : "Sin vinilo"}</p>
-
-            <button onclick="verAlbum(${a.idAlbum})">Ver álbum</button>
+        <div class="item product-card">
+            ${a.imagenUrl ? `
+                <img src="${a.imagenUrl}" alt="${a.nombreAlbum}" class="product-image">
+            ` : `
+                <div class="product-image placeholder">💿</div>
+            `}
+            <div class="product-info">
+                <h3>${a.nombreAlbum}</h3>
+                <p><strong>Artista:</strong> ${a.artistaAlbum}</p>
+                <p><strong>Año:</strong> ${a.yearAlbum}</p>
+                <p><strong>Género:</strong> ${a.generoAlbum}</p>
+                <p><strong>Contenido:</strong> ${canciones} canciones ${vinilo ? '+ vinilo' : ''}</p>
+                <div class="product-actions">
+                    <button onclick="verAlbum(${a.idAlbum})" class="btn-small btn-primary">Ver álbum</button>
+                </div>
+            </div>
         </div>`;
     });
 }

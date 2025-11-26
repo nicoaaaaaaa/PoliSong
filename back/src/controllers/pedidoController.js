@@ -4,6 +4,7 @@ import Pedido from "../models/Pedido.js";
 import PedidoItem from "../models/PedidoItem.js";
 import Carrito from "../models/Carrito.js";
 import Producto from "../models/Producto.js";
+import Notificacion from "../models/Notification.js";
 
 export const crearPedido = async (req, res) => {
   try {
@@ -46,13 +47,16 @@ export const crearPedido = async (req, res) => {
 
     const pedidosCreados = [];
 
+    // Notificacion con mensaje al vendedor
+
     for (const [idVendedor, items] of Object.entries(productosConVendedor)) {
+
       const totalVendedor = items.reduce((sum, item) => {
         return sum + (item.cantidad * item.producto.precio);
       }, 0);
 
       const pedido = await Pedido.create({
-        idUsuario,        
+        idUsuario,
         idVendedor: parseInt(idVendedor),
         total: totalVendedor,
         estado: "pendiente"
@@ -68,7 +72,23 @@ export const crearPedido = async (req, res) => {
       }
 
       pedidosCreados.push(pedido);
+
+      await Notificacion.create({
+        idUsuario,
+        mensaje: `Tu pedido #${pedido.idPedido} fue creado y está pendiente.`,
+        tipo: "pedido_comprador",
+        refId: pedido.idPedido
+      });
+
+      await Notificacion.create({
+        idUsuario: parseInt(idVendedor),
+        mensaje: `Nuevo pedido #${pedido.idPedido} recibido. ¿Aceptas o rechazas?`,
+        tipo: "pedido_vendedor",  // ← Esto activará los botones
+        refId: pedido.idPedido    // ← ID para las funciones aceptar/rechazar
+      });
     }
+
+    // Notificacion sin mensaje al vendedor
 
     if (productosSinVendedor.length > 0) {
       const totalMP3 = productosSinVendedor.reduce((sum, item) => {
@@ -92,6 +112,13 @@ export const crearPedido = async (req, res) => {
       }
 
       pedidosCreados.push(pedidoMP3);
+
+      await Notificacion.create({
+        idUsuario,
+        mensaje: `Tu compra de canciones digitales (pedido #${pedidoMP3.idPedido}) fue aprobada automáticamente.`,
+        tipo: "sistema",
+        refId: pedidoMP3.idPedido
+      });
     }
 
     // Vaciar carrito
@@ -110,4 +137,70 @@ export const crearPedido = async (req, res) => {
     console.error(error);
     res.status(500).json({ msg: "Error al crear pedido" });
   }
+};
+
+export const aceptarPedido = async (req, res) => {
+    try {
+        const idPedido = req.params.id;
+        const idVendedor = req.usuario.idUsuario;
+
+        const pedido = await Pedido.findOne({ where: { idPedido } });
+
+        if (!pedido) {
+            return res.status(404).json({ msg: "Pedido no encontrado" });
+        }
+
+        if (pedido.idVendedor !== idVendedor) {
+            return res.status(403).json({ msg: "No tienes permiso para aceptar este pedido" });
+        }
+
+        pedido.estado = "aprobado";
+        await pedido.save();
+
+        await Notificacion.create({
+            idUsuario: pedido.idUsuario,
+            mensaje: `Tu pedido #${pedido.idPedido} ha sido **aprobado** por el vendedor.`,
+            tipo: "pedido_comprador",
+            refId: pedido.idPedido
+        });
+
+        res.json({ msg: "Pedido aprobado con éxito" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Error al aprobar pedido" });
+    }
+};
+
+export const rechazarPedido = async (req, res) => {
+    try {
+        const idPedido = req.params.id;
+        const idVendedor = req.usuario.idUsuario;
+
+        const pedido = await Pedido.findOne({ where: { idPedido } });
+
+        if (!pedido) {
+            return res.status(404).json({ msg: "Pedido no encontrado" });
+        }
+
+        if (pedido.idVendedor !== idVendedor) {
+            return res.status(403).json({ msg: "No tienes permiso para rechazar este pedido" });
+        }
+
+        pedido.estado = "rechazado";
+        await pedido.save();
+
+        await Notificacion.create({
+            idUsuario: pedido.idUsuario,
+            mensaje: `Tu pedido #${pedido.idPedido} ha sido **rechazado** por el vendedor.`,
+            tipo: "pedido_comprador",
+            refId: pedido.idPedido
+        });
+
+        res.json({ msg: "Pedido rechazado con éxito" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Error al rechazar pedido" });
+    }
 };

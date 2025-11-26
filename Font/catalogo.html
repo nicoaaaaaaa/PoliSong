@@ -7,35 +7,43 @@
 </head>
 <body>
 
-<nav>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="carrito.html">Carrito</a>
-    <a href="panelVendedor.html">Panel Vendedor</a>
-    <a href="perfil.html">Perfil</a>
-    <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs"></span></a>
-    <div id="panelNotifs" class="oculto panel-notifs"></div>
-</nav>
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
 
 <h1>Catálogo de Productos</h1>
 
 <section>
-    <h2>Vinilos</h2>
-    <div id="vinilos" class="grid"></div>
-</section>
+        <h2>📀 Vinilos</h2>
+        <div id="vinilos" class="grid"></div>
+    </section>
 
 <hr>
 
 <section>
-    <h2>Canciones (mp3)</h2>
-    <div id="canciones" class="grid"></div>
-</section>
+        <h2>🎵 Canciones (MP3)</h2>
+        <div id="canciones" class="grid"></div>
+    </section>
 
 <hr>
 
 <section>
-    <h2>Álbumes</h2>
-    <div id="albumes" class="grid"></div>
-</section>
+        <h2>💿 Álbumes</h2>
+        <div id="albumes" class="grid"></div>
+    </section>
 
 <script src="js/catalogo.js"></script>
 <script src="js/notificaciones.js"></script>

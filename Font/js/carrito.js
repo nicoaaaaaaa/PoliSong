@@ -45,47 +45,105 @@ async function verificar(token) {
 async function cargarCarrito() {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("/api/carrito/ver", {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
+    try {
+        const res = await fetch("/api/carrito/ver", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
 
-    const items = await res.json();
+        if (!res.ok) throw new Error("Error al cargar el carrito");
 
-    console.log(items);
+        const items = await res.json();
+        console.log("Items del carrito:", items);
 
-    const div = document.getElementById("lista-carrito");
-    div.innerHTML = "";
+        const div = document.getElementById("lista-carrito");
+        div.innerHTML = "";
 
-    let total = 0;
+        if (items.length === 0) {
+            div.innerHTML = `
+                <div class="carrito-vacio">
+                    <h2>🛒 Tu carrito está vacío</h2>
+                    <p>¡Descubre música increíble en nuestro catálogo!</p>
+                    <a href="catalogo.html" class="btn btn-primary">Explorar Catálogo</a>
+                </div>
+            `;
+            return;
+        }
 
-    items.forEach(item => {
-        const p = item.producto;
-        total += p.precio * item.cantidad;
+        let total = 0;
+
+        items.forEach(item => {
+            const p = item.producto;
+            const subtotal = p.precio * item.cantidad;
+            total += subtotal;
+
+            div.innerHTML += `
+                <div class="item">
+                    <div class="item-info">
+                        <h3>${p.nombreProducto}</h3>
+                        <p>🎤 ${p.artista}</p>
+                        <p class="precio-total">$${subtotal.toFixed(2)}</p>
+                    </div>
+                    <div class="item-actions">
+                        <div class="cantidad-control">
+                            <span>${item.cantidad} x $${p.precio}</span>
+                        </div>
+                        <button onclick="eliminar(${item.idCarrito})">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
 
         div.innerHTML += `
-            <div class="item">
-                <h3>${p.nombreProducto}</h3>
-                <p>${p.artista}</p>
-                <p>$${p.precio} x ${item.cantidad}</p>
-                <button onclick="eliminar(${item.idCarrito})">Eliminar</button>
+            <div class="total-container">
+                <h2>Total: $${total.toFixed(2)}</h2>
+                <p class="envio-info">✅ Envío gratuito incluido</p>
             </div>
         `;
-    });
 
-    div.innerHTML += `<h2>Total: $${total}</h2>`;
-}
-
-async function eliminar(idCarrito) {
-    const token = localStorage.getItem("token");
-
-    await fetch(`/api/carrito/eliminar/${idCarrito}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    cargarCarrito();
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("lista-carrito").innerHTML = `
+            <div class="error-carrito">
+                <h2>❌ Error al cargar el carrito</h2>
+                <p>Intenta recargar la página</p>
+            </div>
+        `;
+    }
 }
 
 document.getElementById("btn-comprar").onclick = () => {
     window.location.href = "pedido.html";
 };
+
+async function eliminar(idCarrito) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await fetch(`/api/carrito/eliminar/${idCarrito}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+            // Efecto visual de eliminación
+            const item = document.querySelector(`[onclick="eliminar(${idCarrito})"]`).closest('.item');
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-100px)';
+            
+            setTimeout(() => {
+                cargarCarrito();
+            }, 300);
+        } else {
+            alert('Error al eliminar el producto');
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert('Error de conexión');
+    }
+}

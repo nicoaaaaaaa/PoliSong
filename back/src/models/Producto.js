@@ -48,7 +48,7 @@ Producto.belongsTo(Usuario, { foreignKey: "idVendedor" });
 
 // Relación álbum → vinilos/mp3
 Album.hasMany(Producto, { foreignKey: "idAlbum" });
-Producto.belongsTo(Album, { foreignKey: "idAlbum" });
+Producto.belongsTo(Album, { foreignKey: "idAlbum", as: "Album"});
 
 /*Producto.hasMany(Carrito, {
   foreignKey: "idProducto",

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pedidos - PoliSong</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>📦 Mis Pedidos</h1>
+            <p>Gestiona y revisa el estado de tus compras</p>
+        </div>
+
+        <div class="filtros-pedidos">
+            <button class="btn-filter active" data-filter="todos">Todos</button>
+            <button class="btn-filter" data-filter="pendiente">Pendientes</button>
+            <button class="btn-filter" data-filter="aprobado">Aprobados</button>
+            <button class="btn-filter" data-filter="rechazado">Rechazados</button>
+        </div>
+
+        <div id="lista-pedidos" class="lista-pedidos">
+            <div class="loading-state">
+                <div class="loading"></div>
+                <p>Cargando tus pedidos...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mispedidos.js"></script>
+    <script src="js/notificaciones.js"></script>
+</body>
+</html>

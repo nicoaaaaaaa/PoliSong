@@ -6,18 +6,33 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 
-<nav>
-    <a href="registro.html">Registro</a>
+<nav class="nav-public">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="registro.html">Registrarse</a>
+        </div>
 </nav>
 
 <body>
 <h1>Iniciar Sesión</h1>
 
 <form id="loginForm">
-   <input id="correo" type="email" name="correo" placeholder="Correo" required>
-    <input id="contraseña" type="password" name="contraseña" placeholder="Contraseña" required>
-    <button type="submit">Ingresar</button>
-</form>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <input id="correo" type="email" name="correo" placeholder="📧 Correo electrónico" required>
+        <input id="contraseña" type="password" name="contraseña" placeholder="🔒 Contraseña" required>
+        
+        <button type="submit" id="submitBtn">
+            <span id="btnText">Ingresar</span>
+            <div class="loading" id="btnLoading" style="display: none;"></div>
+        </button>
+
+        <div class="login-links">
+            <a href="registro.html">¿No tienes cuenta? Regístrate aquí</a>
+        </div>
+    </form>
 
 <script src="js/login.js"></script>
 </body>

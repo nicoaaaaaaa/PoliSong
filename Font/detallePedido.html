@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Pedido - PoliSong</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <button onclick="window.history.back()" class="btn btn-secondary">← Volver</button>
+            <h1>📋 Detalle del Pedido</h1>
+        </div>
+
+        <div id="detalle-pedido" class="detalle-pedido">
+            <div class="loading-state">
+                <div class="loading"></div>
+                <p>Cargando detalle del pedido...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/detallePedido.js"></script>
+    <script src="js/notificaciones.js"></script>
+</body>
+</html>

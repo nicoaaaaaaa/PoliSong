@@ -8,11 +8,22 @@
 
 <body>
 
-<nav>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="panelVendedor.html">Panel Vendedor</a>
-    <a href="perfil.html">Perfil</a>
-</nav>
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
 
 <h1>Publicar Producto</h1>
 
@@ -129,5 +140,6 @@
 
 
 <script src="js/panelVendedor.js"></script>
+<script src="js/notificaciones.js"></script>
 </body>
 </html>

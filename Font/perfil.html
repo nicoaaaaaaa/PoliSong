@@ -1,14 +1,50 @@
-<h1>Perfil</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - PoliSong</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
 
-<nav>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="panelVendedor.html">Panel Vendedor</a>
-    <a href="perfil.html">Perfil</a>
-</nav>
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
 
-<p>Bienvenido, <span id="nombreUsuario"></span></p>
-<p>Rol: <span id="rolUsuario"></span></p>
+<div class="perfil-container">
+        <div class="perfil-header">
+            <h1>👤 Mi Perfil</h1>
+        </div>
 
-<button id="logoutBtn">Cerrar sesión</button>
+        <div class="perfil-card">
+            <div class="perfil-avatar">
+                👤
+            </div>
+            
+            <div class="perfil-info">
+                <h2 class="perfil-nombre" id="nombreUsuario">Cargando...</h2>
+                <span class="perfil-rol" id="rolUsuario">Cargando...</span>
+            </div>
+
+            <div class="perfil-actions">
+                <button id="logoutBtn" class="btn-logout">
+                    🚪 Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
 
 <script src="js/perfil.js"></script>
+<script src="js/notificaciones.js"></script>

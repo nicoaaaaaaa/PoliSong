@@ -36,15 +36,28 @@ async function cargarProducto() {
 
     if (p.Album) {
         html += `
-            <div class="vinilo-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h2>💿 Parte del Álbum: ${p.Album.nombreAlbum}</h2>
-                ${p.Album.imagenUrl ? `
-                    <img src="${p.Album.imagenUrl}" alt="${p.Album.nombreAlbum}" class="vinilo-image" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px; margin: 10px 0;">
-                ` : ''}
-                <p><strong>Artista del álbum:</strong> ${p.Album.artistaAlbum}</p>
-                <p><strong>Año del álbum:</strong> ${p.Album.yearAlbum}</p>
-                <p><strong>Género del álbum:</strong> ${p.Album.generoAlbum}</p>
-                <button onclick="verAlbum(${p.Album.idAlbum})" class="btn-primary">Ver álbum completo</button>
+            <div class="album-section">
+                <h2>💿 ${p.tipo === "mp3" ? "Parte del Álbum" : "Álbum Disponible"}: ${p.Album.nombreAlbum}</h2>
+                <div class="album-info">
+                    ${p.Album.imagenUrl ? `
+                        <img src="${p.Album.imagenUrl}" alt="${p.Album.nombreAlbum}" class="album-image">
+                    ` : ''}
+                    <div class="album-details">
+                        <p><strong>Artista:</strong> ${p.Album.artistaAlbum}</p>
+                        <p><strong>Año:</strong> ${p.Album.yearAlbum}</p>
+                        <p><strong>Género:</strong> ${p.Album.generoAlbum}</p>
+                        
+                        ${p.tipo === "vinilo" ? `
+                            <p><strong>Este vinilo forma parte del álbum</strong></p>
+                        ` : `
+                            <p><strong>Esta canción forma parte del álbum</strong></p>
+                        `}
+                        
+                        <button onclick="verAlbum(${p.Album.idAlbum})" class="btn btn-primary">
+                            Ver álbum completo
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -71,6 +84,10 @@ async function cargarProducto() {
     cont.innerHTML = html;
 }
 
+window.verAlbum = function(idAlbum) {
+    window.location.href = `album.html?id=${idAlbum}`;
+}
+
 async function agregarAlCarrito(idProducto) {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -92,13 +109,47 @@ async function agregarAlCarrito(idProducto) {
         if (res.ok) {
             alert("✅ Producto agregado al carrito");
         } else {
-            alert("❌ Error al agregar producto al carrito");
+            const error = await res.json();
+            alert("❌ Error: " + (error.error || error.msg || "No se pudo agregar al carrito"));
         }
     } catch (error) {
         console.error("Error:", error);
         alert("❌ Error de conexión");
     }
 }
-function comprarAhora(idProducto) {
-    window.location.href = `pedido.html?id=${idProducto}`;
+
+async function comprarAhora(idProducto) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Debes iniciar sesión para comprar");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        console.log("Creando pedido individual para producto:", idProducto);
+        
+        const res = await fetch("/api/pedidos/crearIndividual", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ idProducto, cantidad: 1 })
+        });
+
+        const data = await res.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (res.ok) {
+            const idPedido = data.idPedido;
+            alert("✅ Pedido creado con éxito");
+            window.location.href = `confirmacion.html?id=${idPedido}`;
+        } else {
+            alert("❌ Error al crear pedido: " + (data.error || "Error desconocido"));
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("❌ Error de conexión: " + error.message);
+    }
 }

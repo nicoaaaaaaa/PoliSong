@@ -1,41 +1,27 @@
 // src/routes/productoRoutes.js
 import Producto from "../models/Producto.js";
 import express from "express";
-import { publicarmp3, publicarVinilo } from "../controllers/productoController.js";
+import { descargarMP3, obtenerProductos, publicarmp3, publicarVinilo,
+  obtenerProductoPorId
+ } from "../controllers/productoController.js";
 import { isVendedor } from "../middleware/isVendedor.js";
 import autenticado from "../middleware/autenticado.js";
 import uploadSingle from "../middleware/upload.js";
 import uploadImage from "../middleware/uploadImages.js";
+import { obtenerAlbumPorId } from "../controllers/albumController.js";
 
 const router = express.Router();
 
 // Solo vendedores pueden publicar
 router.post("/publicarV", autenticado, isVendedor, uploadImage.single('imagen'),publicarVinilo);
 
-router.post("/publicarM", autenticado, isVendedor, uploadSingle.single("archivo"),publicarmp3)
+router.post("/publicarM", autenticado, isVendedor, uploadSingle.single("archivo"),publicarmp3);
 
-router.get("/ver", async (req, res) => {
-  try {
-    const productos = await Producto.findAll();
-    res.json(productos);
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-    res.status(500).json({ msg: "Error al obtener productos" });
-  }
-});
+router.get("/descargar/:id", autenticado, descargarMP3)
 
-router.get("/ver/:id", async (req, res) => {
-  try {
-    const productos = await Producto.findByPk(req.params.id);
-    if(!productos){
-      return res.status(404).json({ msg: "Producto no encontrado" });
-    }
-    res.json(productos);
-  } catch (error) {
-    console.error("Error al obtener productos:", error);
-    res.status(500).json({ msg: "Error al obtener productos" });
-  }
-});
+router.get("/ver", obtenerProductos);
+
+router.get("/ver/:id", obtenerProductoPorId);
 
 router.delete("/e", async (req, res) => {
   try {

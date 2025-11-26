@@ -30,8 +30,8 @@ Usuario.hasMany(Carrito, {
 Pedido.belongsTo(Usuario, { foreignKey: "idUsuario" });
 
 // Relación pedido → items
-Pedido.hasMany(PedidoItem, { foreignKey: "idPedido" });
+Pedido.hasMany(PedidoItem, { foreignKey: "idPedido" , as: "PedidoItems"});
 PedidoItem.belongsTo(Pedido, { foreignKey: "idPedido" });
 
 // Item → Producto
-PedidoItem.belongsTo(Producto, { foreignKey: "idProducto" });
+PedidoItem.belongsTo(Producto, { foreignKey: "idProducto" , as: "producto" });

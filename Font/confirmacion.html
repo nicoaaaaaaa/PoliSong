@@ -1,3 +1,62 @@
-<h1>¡Gracias por tu compra!</h1>
-<p>Tu pedido ha sido registrado correctamente.</p>
-<a href="catalogo.html">Volver al catálogo</a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Compra - PoliSong</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
+
+
+<body class="confirmation-page">
+    <div class="confirmation-container">
+        <div class="confirmation-content">
+            <div class="confirmation-icon">🎉</div>
+            <!-- Alternativa con check animado:
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                </div>
+            </div>
+            -->
+            
+            <h1>¡Gracias por tu compra!</h1>
+            <p>Tu pedido ha sido registrado correctamente y está siendo procesado.</p>
+            
+            <div class="confirmation-actions">
+                <a href="catalogo.html" class="btn-primary">
+                    🎵 Seguir Comprando
+                </a>
+                <a href="mispedidos.html" class="btn-secondary">
+                    📦 Ver Mis Pedidos
+                </a>
+            </div>
+            
+            <div class="additional-info">
+                <p>📧 Recibirás un email de confirmación</p>
+                <p>⏰ Tu pedido será procesado en las próximas horas</p>
+                <p>📞 ¿Necesitas ayuda? Contáctanos</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/confirmation.js"></script>
+</body>
+</html>

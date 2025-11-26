@@ -115,22 +115,10 @@ function renderCanciones(canciones) {
 
     canciones.forEach(c => {
         cont.innerHTML += `
-        <div class="item product-card">
-            ${c.Album && c.Album.imagenUrl ? `
-            <img src="${c.Album.imagenUrl}" alt="${c.Album.nombreAlbum}" class="product-image">
-        ` : `
-            <div class="product-image placeholder">🎵</div>
-        `}
             <div class="product-info">
                 <h3>${c.nombreProducto}</h3>
                 <p><strong>Artista:</strong> ${c.artista}</p>
                 <p><strong>Precio:</strong> $${c.precio}</p>
-
-                ${c.archivoUrl ? `
-                    <audio controls class="small-audio">
-                        <source src="${c.archivoUrl}" type="audio/mpeg">
-                    </audio>
-                ` : ""}
 
                 <div class="product-actions">
                     <button onclick="verProducto(${c.idProducto})" class="btn-small">Ver</button>

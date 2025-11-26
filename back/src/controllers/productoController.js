@@ -1,6 +1,8 @@
 // src/controllers/productoController.js
 import Producto from "../models/Producto.js";
 import Album from "../models/Album.js";
+import Pedido from "../models/Pedido.js";
+import PedidoItem from "../models/PedidoItem.js";
 import fs from "fs";
 import path from "path";
 import { Op } from 'sequelize';
@@ -196,31 +198,112 @@ export const obtenerProductos = async (req, res) => {
         const productos = await Producto.findAll({
             include: [{
                 model: Album,
-                as: 'Album' // Asegúrate de que esta asociación exista
+                as: 'Album',
+                attributes: ['idAlbum', 'nombreAlbum', 'artistaAlbum', 'yearAlbum', 'generoAlbum', 'imagenUrl']
             }]
         });
         res.json(productos);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    } catch (err) {
+        console.error("Error al obtener productos:", err);
+        res.status(500).json({ error: err.message });
     }
 };
 
 export const obtenerProductoPorId = async (req, res) => {
     try {
         const { id } = req.params;
+
         const producto = await Producto.findByPk(id, {
             include: [{
                 model: Album,
-                as: 'Album'
+                as: 'Album', // Asegúrate de que este alias coincida con tu relación
+                attributes: ['idAlbum', 'nombreAlbum', 'artistaAlbum', 'yearAlbum', 'generoAlbum', 'imagenUrl']
             }]
         });
 
         if (!producto) {
-            return res.status(404).json({ msg: "Producto no encontrado" });
+            return res.status(404).json({ error: "Producto no encontrado" });
         }
 
         res.json(producto);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+
+    } catch (err) {
+        console.error("Error al obtener producto:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+export const descargarMP3 = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const idUsuario = req.usuario.idUsuario;
+
+        console.log("=== DEBUG DESCARGAR MP3 ===");
+        console.log("ID Producto:", id);
+        console.log("ID Usuario:", idUsuario);
+
+        // Verificar que el producto existe y es MP3
+        const producto = await Producto.findByPk(id);
+        if (!producto) {
+            console.log("❌ Producto no encontrado");
+            return res.status(404).json({ error: "Producto no encontrado" });
+        }
+
+        console.log("✅ Producto encontrado:", {
+            nombre: producto.nombreProducto,
+            tipo: producto.tipo,
+            archivoUrl: producto.archivoUrl
+        });
+
+        if (producto.tipo !== "mp3") {
+            console.log("❌ No es MP3:", producto.tipo);
+            return res.status(400).json({ error: "Solo se pueden descargar archivos MP3" });
+        }
+
+        // Verificar permiso de descarga
+        const pedidoItem = await PedidoItem.findOne({
+            where: { idProducto: id },
+            include: [{
+                model: Pedido,
+                where: { idUsuario }
+            }]
+        });
+
+        console.log("✅ Resultado de verificación de permiso:", {
+            pedidoItem: pedidoItem ? "Encontrado" : "No encontrado",
+            pedidoEstado: pedidoItem?.Pedido?.estado,
+            pedidoId: pedidoItem?.Pedido?.idPedido
+        });
+
+        if (!pedidoItem) {
+            console.log("❌ No se encontró pedidoItem - Usuario no tiene permiso");
+            return res.status(403).json({ error: "No tienes permiso para descargar este archivo" });
+        }
+
+        // Construir la ruta del archivo
+        const filePath = path.join(process.cwd(),'..', producto.archivoUrl);
+        console.log("📁 Ruta del archivo:", filePath);
+        
+        // Verificar que el archivo existe
+        if (!fs.existsSync(filePath)) {
+            console.log("❌ Archivo no existe en el sistema de archivos");
+            return res.status(404).json({ error: "Archivo no encontrado" });
+        }
+
+        console.log("✅ Archivo encontrado, iniciando descarga...");
+
+        // Configurar headers para descarga
+        const filename = `${producto.nombreProducto.replace(/[^a-z0-9]/gi, "_")}.mp3`;
+        
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Type', 'audio/mpeg');
+        
+        // Enviar el archivo
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+
+    } catch (err) {
+        console.error("❌ Error al descargar MP3:", err);
+        res.status(500).json({ error: err.message });
     }
 };

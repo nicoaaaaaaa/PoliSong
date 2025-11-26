@@ -1,6 +1,44 @@
-<h1>Resumen del pedido</h1>
-<div id="resumen"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Pedido - PoliSong</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <nav class="nav-private">
+        <div class="nav-brand">
+            <a href="catalogo.html">🎵 PoliSong</a>
+        </div>
+        <div class="nav-links">
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="mispedidos.html">Mis Pedidos</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="panelVendedor.html">Panel Vendedor</a>
+            <div class="nav-notifications">
+                <a href="#" id="btnNotificaciones">🔔 <span id="badgeNotifs" class="notification-badge"></span></a>
+                <div id="panelNotifs" class="notification-panel oculto"></div>
+            </div>
+        </div>
+    </nav>
 
-<button id="btn-confirmar">Confirmar pedido</button>
+    <div class="container">
+        <div class="pedido-header">
+            <h1>🛍️ Confirmar tu Pedido</h1>
+            <p>Revisa los detalles antes de confirmar</p>
+        </div>
 
-<script src="js/pedido.js"></script>
+        <div class="resumen-pedido">
+            <div id="resumen" class="resumen-items"></div>
+            <div class="acciones-pedido">
+                <button onclick="window.history.back()" class="btn btn-secondary">← Volver</button>
+                <button id="btn-confirmar" class="btn btn-primary">✅ Confirmar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/pedido.js"></script>
+    <script src="js/notificaciones.js"></script>
+</body>
+</html>

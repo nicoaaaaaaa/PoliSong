@@ -25,7 +25,7 @@ app.use(cors());
 
 
 // En index.js, después de app.use(cors());
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   console.log('=== INICIO REQUEST ===');
   console.log('URL:', req.url);
   console.log('Method:', req.method);
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   console.log('Content-Length:', req.get('Content-Length'));
   console.log('=== FIN REQUEST ===');
   next();
-});
+});*/
 
 //app.use(express.json());
 
